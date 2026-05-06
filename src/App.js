@@ -17,28 +17,28 @@ function App() {
         marginBottom: "20px",
         textAlign: "center"
       }}>
-        🔴 RHAPATHON LIVE - JOUR 3
+        🔴 RHAPATHON - JOUR 3
       </h1>
       
       <h2 style={{
         color: "#fff",
-        fontSize: "20px",
+        fontSize: "18px",
         marginBottom: "20px",
         textAlign: "center"
       }}>
-        PASTEUR CHRIS EN DIRECT
+        Rediffusion - Pasteur Chris
       </h2>
       
-      <iframe
-        src="https://www.facebook.com/plugins/video.php?href=https%3A%2F%2Fwww.facebook.com%2Fshare%2Fv%2F18etFh3JYF%2F&show_text=false&autoplay=true&allowfullscreen=true"
-        width="100%"
-        style={{ maxWidth: "900px", border: "none", borderRadius: "8px" }}
-        height="500"
-        scrolling="no"
-        frameBorder="0"
-        allowFullScreen={true}
-        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-      ></iframe>
+      <video 
+        width="100%" 
+        style={{ maxWidth: "900px", borderRadius: "8px" }}
+        controls 
+        autoPlay
+        playsInline
+        src="https://res.cloudinary.com/dvoya2e3o/video/upload/v1778067776/Appuyez_..._360p_kigzk0.mp4"
+      >
+        Votre navigateur ne supporte pas la vidéo.
+      </video>
       
       <p style={{
         color: "#FFD700",
@@ -46,7 +46,7 @@ function App() {
         textAlign: "center",
         fontSize: "18px"
       }}>
-        GLOIREMEDIA - ÉDITION MAI 2026
+        GLOIREMEDIA - Le live reprend à la prochaine session
       </p>
     </div>
   );
