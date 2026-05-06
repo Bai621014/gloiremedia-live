@@ -1,65 +1,43 @@
-import React from 'react';
+import React from "react";
 
 function App() {
   return (
     <div style={{
-      minHeight: '100vh',
-      backgroundColor: '#000000',
-      color: 'white',
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      justifyContent: 'center',
-      padding: '20px',
-      fontFamily: 'Arial, sans-serif'
+      backgroundColor: "#000",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "20px"
     }}>
-      
       <h1 style={{
-        fontSize: '3rem',
-        fontWeight: 'bold',
-        color: '#FFD700',
-        marginBottom: '16px',
-        textAlign: 'center'
+        color: "#FFD700",
+        fontSize: "28px",
+        marginBottom: "20px",
+        textAlign: "center"
       }}>
-        🔥 GloireMedia Live 🔥
+        🔴 RHAPATHON LIVE - JOUR 3
       </h1>
       
+      <iframe
+        src="https://www.facebook.com/plugins/video.php?href=https://www.facebook.com/share/v/18wdPUnqXf/&show_text=false&autoplay=true"
+        width="100%"
+        style={{ maxWidth: "800px", border: "none" }}
+        height="450"
+        scrolling="no"
+        frameBorder="0"
+        allowFullScreen={true}
+        allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+      ></iframe>
+      
       <p style={{
-        fontSize: '1.25rem',
-        color: '#D1D5DB',
-        marginBottom: '32px',
-        textAlign: 'center'
+        color: "#fff",
+        marginTop: "20px",
+        textAlign: "center"
       }}>
-        Pastor Chris Live 24/7
+        GLOIREMEDIA - Édification en direct
       </p>
-
-      <div style={{
-        width: '100%',
-        maxWidth: '900px',
-        aspectRatio: '16/9',
-        borderRadius: '8px',
-        overflow: 'hidden',
-        border: '2px solid #FFD700',
-        boxShadow: '0 0 30px rgba(255, 215, 0, 0.3)'
-      }}>
-        <iframe
-          style={{ width: '100%', height: '100%' }}
-          src="https://www.youtube.com/embed/live_stream?channel=UCGNyg8n2rB6VlJWl3TlymJQ&autoplay=1&mute=1"
-          title="LoveWorld USA Live"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen>
-        </iframe>
-      </div>
-
-      <p style={{
-        marginTop: '32px',
-        fontSize: '14px',
-        color: '#6B7280'
-      }}>
-        GloireMedia Live © 2026 - Pour la Gloire de Jésus-Christ
-      </p>
-
     </div>
   );
 }
