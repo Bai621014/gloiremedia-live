@@ -44,8 +44,8 @@ function App() {
       }}>
         <iframe
           style={{ width: '100%', height: '100%' }}
-          src="https://www.youtube.com/embed/qMdwV7p_4dk?autoplay=1&mute=1&loop=1&playlist=qMdwV7p_4dk"
-          title="Pastor Chris Teaching"
+          src="https://www.youtube.com/embed/live_stream?channel=UCGNyg8n2rB6VlJWl3TlymJQ&autoplay=1&mute=1"
+          title="LoveWorld USA Live"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen>
