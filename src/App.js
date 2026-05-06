@@ -2,28 +2,61 @@ import React from 'react';
 
 function App() {
   return (
-    <div className="min-h-screen bg-gloire-dark text-white flex flex-col items-center justify-center p-4">
+    <div style={{
+      minHeight: '100vh',
+      backgroundColor: '#000000',
+      color: 'white',
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: '20px',
+      fontFamily: 'Arial, sans-serif'
+    }}>
       
-      <h1 className="text-4xl md:text-6xl font-bold text-gloire-gold mb-4 text-center">
+      <h1 style={{
+        fontSize: '3rem',
+        fontWeight: 'bold',
+        color: '#FFD700',
+        marginBottom: '16px',
+        textAlign: 'center'
+      }}>
         🔥 GloireMedia Live 🔥
       </h1>
       
-      <p className="text-xl text-gray-300 mb-8 text-center">
+      <p style={{
+        fontSize: '1.25rem',
+        color: '#D1D5DB',
+        marginBottom: '32px',
+        textAlign: 'center'
+      }}>
         Pastor Chris Live 24/7
       </p>
 
-      <div className="w-full max-w-4xl aspect-video rounded-lg overflow-hidden shadow-2xl shadow-gloire-gold/20 border-2 border-gloire-gold">
+      <div style={{
+        width: '100%',
+        maxWidth: '900px',
+        aspectRatio: '16/9',
+        borderRadius: '8px',
+        overflow: 'hidden',
+        border: '2px solid #FFD700',
+        boxShadow: '0 0 30px rgba(255, 215, 0, 0.3)'
+      }}>
         <iframe
-          className="w-full h-full"
-          src="https://www.youtube.com/embed/Y8u7F0lCL6Q?autoplay=1&mute=1&loop=1&playlist=Y8u7F0lCL6Q"
-          title="Pastor Chris Teaching"
+          style={{ width: '100%', height: '100%' }}
+          src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&loop=1&playlist=jfKfPfyJRdk"
+          title="Pastor Chris Live"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen>
         </iframe>
       </div>
 
-      <p className="mt-8 text-sm text-gray-500">
+      <p style={{
+        marginTop: '32px',
+        fontSize: '14px',
+        color: '#6B7280'
+      }}>
         GloireMedia Live © 2026 - Pour la Gloire de Jésus-Christ
       </p>
 
