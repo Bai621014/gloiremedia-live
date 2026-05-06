@@ -44,8 +44,8 @@ function App() {
       }}>
         <iframe
           style={{ width: '100%', height: '100%' }}
-          src="https://www.youtube.com/embed/jfKfPfyJRdk?autoplay=1&mute=1&loop=1&playlist=jfKfPfyJRdk"
-          title="Pastor Chris Live"
+          src="https://www.youtube.com/embed/qMdwV7p_4dk?autoplay=1&mute=1&loop=1&playlist=qMdwV7p_4dk"
+          title="Pastor Chris Teaching"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           allowFullScreen>
