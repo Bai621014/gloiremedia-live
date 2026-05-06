@@ -15,7 +15,7 @@ function App() {
       <div className="w-full max-w-4xl aspect-video rounded-lg overflow-hidden shadow-2xl shadow-gloire-gold/20 border-2 border-gloire-gold">
         <iframe
           className="w-full h-full"
-          src="https://www.youtube.com/embed/5qap5aO4i9A?autoplay=1&mute=1&loop=1&playlist=5qap5aO4i9A"
+          src="https://www.youtube.com/embed/Y8u7F0lCL6Q?autoplay=1&mute=1&loop=1&playlist=Y8u7F0lCL6Q"
           title="Pastor Chris Teaching"
           frameBorder="0"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
