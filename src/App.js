@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 
 function App() {
-  // Mets ici les liens de tes vidéos/photos depuis Supabase ou Cloudinary
   const [medias] = useState([
     {
       type: "video",
@@ -13,7 +12,21 @@ function App() {
       url: "https://res.cloudinary.com/dvoya2e3o/image/upload/v1748067776/rhapathon-poster.jpg",
       title: "Affiche Officielle"
     },
-    // Ajoute d'autres objets ici
+    {
+      type: "video",
+      url: "https://res.cloudinary.com/dvoya2e3o/video/upload/v1778067776/sample_video_1.mp4",
+      title: "Message Dimanche"
+    },
+    {
+      type: "image",
+      url: "https://res.cloudinary.com/dvoya2e3o/image/upload/v1748067776/sample_image_1.jpg",
+      title: "Photos Culte"
+    },
+    {
+      type: "video",
+      url: "https://res.cloudinary.com/dvoya2e3o/video/upload/v1778067776/sample_video_2.mp4",
+      title: "Louange Live"
+    }
   ]);
 
   const [selected, setSelected] = useState(medias[0]);
@@ -54,11 +67,13 @@ function App() {
               cursor: "pointer",
               border: selected.url === media.url? "2px solid #FFD700" : "1px solid #333",
               borderRadius: "6px",
-              padding: "8px",
-              backgroundColor: "#111"
+              padding: "8px 12px",
+              backgroundColor: "#111",
+              minWidth: "120px",
+              textAlign: "center"
             }}
           >
-            <p style={{ fontSize: "14px", color: "#FFD700" }}>{media.title}</p>
+            <p style={{ fontSize: "14px", color: "#FFD700", margin: 0 }}>{media.title}</p>
           </div>
         ))}
       </div>
