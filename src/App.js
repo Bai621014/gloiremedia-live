@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 
+const CLOUD_NAME = "dvoya2e3o";
+const UPLOAD_PRESET = "gloiremedia"; // on le crée en 2 min
+
 function App() {
-  const [medias] = useState([
+  const [medias, setMedias] = useState([
     {
       type: "video",
       url: "https://res.cloudinary.com/dvoya2e3o/video/upload/v1778067776/Appuyez_..._360p_kigzk0.mp4",
@@ -11,31 +14,71 @@ function App() {
       type: "image",
       url: "https://res.cloudinary.com/dvoya2e3o/image/upload/v1748067776/rhapathon-poster.jpg",
       title: "Affiche Officielle"
-    },
-    {
-      type: "video",
-      url: "https://res.cloudinary.com/dvoya2e3o/video/upload/v1778067776/sample_video_1.mp4",
-      title: "Message Dimanche"
-    },
-    {
-      type: "image",
-      url: "https://res.cloudinary.com/dvoya2e3o/image/upload/v1748067776/sample_image_1.jpg",
-      title: "Photos Culte"
-    },
-    {
-      type: "video",
-      url: "https://res.cloudinary.com/dvoya2e3o/video/upload/v1778067776/sample_video_2.mp4",
-      title: "Louange Live"
     }
   ]);
 
   const [selected, setSelected] = useState(medias[0]);
+  const [uploading, setUploading] = useState(false);
+
+  const handleUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", UPLOAD_PRESET);
+
+    const resourceType = file.type.startsWith("video")? "video" : "image";
+
+    try {
+      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`, {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+
+      const newMedia = {
+        type: resourceType,
+        url: data.secure_url,
+        title: file.name.split(".")[0]
+      };
+
+      setMedias([newMedia,...medias]);
+      setSelected(newMedia);
+    } catch (err) {
+      alert("Erreur upload : " + err.message);
+    }
+    setUploading(false);
+  };
 
   return (
     <div style={{ backgroundColor: "#000", minHeight: "100vh", padding: "20px", color: "#fff" }}>
       <h1 style={{ color: "#FFD700", fontSize: "32px", textAlign: "center", marginBottom: "20px" }}>
         🔴 GLOIREMEDIA LIVE
       </h1>
+
+      {/* Bouton Upload */}
+      <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <label style={{
+          backgroundColor: "#FFD700",
+          color: "#000",
+          padding: "12px 24px",
+          borderRadius: "8px",
+          cursor: "pointer",
+          fontWeight: "bold",
+          display: "inline-block"
+        }}>
+          {uploading? "Upload en cours..." : "📤 Ajouter Photo/Vidéo"}
+          <input
+            type="file"
+            accept="image/*,video/*"
+            onChange={handleUpload}
+            style={{ display: "none" }}
+            disabled={uploading}
+          />
+        </label>
+      </div>
 
       {/* Lecteur principal */}
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
