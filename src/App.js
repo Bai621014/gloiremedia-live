@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 
 const CLOUD_NAME = "dvoya2e3o";
 const UPLOAD_PRESET = "gloiremedia";
@@ -22,6 +22,7 @@ function App() {
   const [showUpload, setShowUpload] = useState(false);
   const [title, setTitle] = useState("");
   const [file, setFile] = useState(null);
+  const videoRef = useRef(null);
 
   const handleFileSelect = (e) => {
     setFile(e.target.files[0]);
@@ -65,13 +66,25 @@ function App() {
     setUploading(false);
   };
 
+  const handleSelectMedia = (media) => {
+    setSelected(media);
+  };
+
+  const handleVideoEnd = () => {
+    const currentIndex = medias.findIndex(m => m.url === selected.url);
+    const nextIndex = (currentIndex + 1) % medias.length;
+    if (medias[nextIndex].type === "video") {
+      setSelected(medias[nextIndex]);
+    }
+  };
+
   return (
     <div style={{ backgroundColor: "#000", minHeight: "100vh", padding: "20px", color: "#fff" }}>
       <h1 style={{ color: "#FFD700", fontSize: "32px", textAlign: "center", marginBottom: "20px" }}>
         🔴 GLOIREMEDIA LIVE
       </h1>
 
-      {/* Bouton Upload */}
+      {/* Upload */}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
         {!showUpload? (
           <label style={{
@@ -148,10 +161,13 @@ function App() {
       <div style={{ maxWidth: "900px", margin: "0 auto" }}>
         {selected.type === "video"? (
           <video
+            ref={videoRef}
+            key={selected.url}
             src={selected.url}
             controls
             autoPlay
             playsInline
+            onEnded={handleVideoEnd}
             style={{ width: "100%", borderRadius: "8px", border: "2px solid #FFD700" }}
           />
         ) : (
@@ -169,7 +185,7 @@ function App() {
         {medias.map((media, index) => (
           <div
             key={index}
-            onClick={() => setSelected(media)}
+            onClick={() => handleSelectMedia(media)}
             style={{
               cursor: "pointer",
               border: selected.url === media.url? "2px solid #FFD700" : "1px solid #333",
