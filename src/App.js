@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
 const CLOUD_NAME = "dvoya2e3o";
-const UPLOAD_PRESET = "gloiremedia"; // on le crée en 2 min
+const UPLOAD_PRESET = "gloiremedia";
 
 function App() {
   const [medias, setMedias] = useState([
@@ -19,10 +19,20 @@ function App() {
 
   const [selected, setSelected] = useState(medias[0]);
   const [uploading, setUploading] = useState(false);
+  const [showUpload, setShowUpload] = useState(false);
+  const [title, setTitle] = useState("");
+  const [file, setFile] = useState(null);
 
-  const handleUpload = async (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+  const handleFileSelect = (e) => {
+    setFile(e.target.files[0]);
+    setShowUpload(true);
+  };
+
+  const handleUpload = async () => {
+    if (!file ||!title.trim()) {
+      alert("Mets un titre et choisis un fichier Boss");
+      return;
+    }
 
     setUploading(true);
     const formData = new FormData();
@@ -41,11 +51,14 @@ function App() {
       const newMedia = {
         type: resourceType,
         url: data.secure_url,
-        title: file.name.split(".")[0]
+        title: title.trim()
       };
 
       setMedias([newMedia,...medias]);
       setSelected(newMedia);
+      setShowUpload(false);
+      setTitle("");
+      setFile(null);
     } catch (err) {
       alert("Erreur upload : " + err.message);
     }
@@ -60,24 +73,75 @@ function App() {
 
       {/* Bouton Upload */}
       <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <label style={{
-          backgroundColor: "#FFD700",
-          color: "#000",
-          padding: "12px 24px",
-          borderRadius: "8px",
-          cursor: "pointer",
-          fontWeight: "bold",
-          display: "inline-block"
-        }}>
-          {uploading? "Upload en cours..." : "📤 Ajouter Photo/Vidéo"}
-          <input
-            type="file"
-            accept="image/*,video/*"
-            onChange={handleUpload}
-            style={{ display: "none" }}
-            disabled={uploading}
-          />
-        </label>
+        {!showUpload? (
+          <label style={{
+            backgroundColor: "#FFD700",
+            color: "#000",
+            padding: "12px 24px",
+            borderRadius: "8px",
+            cursor: "pointer",
+            fontWeight: "bold",
+            display: "inline-block"
+          }}>
+            📤 Ajouter Photo/Vidéo
+            <input
+              type="file"
+              accept="image/*,video/*"
+              onChange={handleFileSelect}
+              style={{ display: "none" }}
+            />
+          </label>
+        ) : (
+          <div style={{ maxWidth: "400px", margin: "0 auto", backgroundColor: "#111", padding: "15px", borderRadius: "8px" }}>
+            <input
+              type="text"
+              placeholder="Titre de la vidéo/photo"
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+              style={{
+                width: "100%",
+                padding: "10px",
+                marginBottom: "10px",
+                borderRadius: "6px",
+                border: "1px solid #333",
+                backgroundColor: "#000",
+                color: "#fff"
+              }}
+            />
+            <div style={{ display: "flex", gap: "10px" }}>
+              <button
+                onClick={handleUpload}
+                disabled={uploading}
+                style={{
+                  flex: 1,
+                  backgroundColor: "#FFD700",
+                  color: "#000",
+                  padding: "10px",
+                  border: "none",
+                  borderRadius: "6px",
+                  fontWeight: "bold",
+                  cursor: "pointer"
+                }}
+              >
+                {uploading? "Upload..." : "Confirmer"}
+              </button>
+              <button
+                onClick={() => {setShowUpload(false); setFile(null); setTitle("");}}
+                style={{
+                  flex: 1,
+                  backgroundColor: "#333",
+                  color: "#fff",
+                  padding: "10px",
+                  border: "none",
+                  borderRadius: "6px",
+                  cursor: "pointer"
+                }}
+              >
+                Annuler
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Lecteur principal */}
