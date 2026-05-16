@@ -252,29 +252,29 @@ function App() {
       <style jsx global>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: #000; color: white; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; overflow: hidden; }
-    .feed { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; }
-    .video-section { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
-    .video-player { height: 100%; width: 100%; object-fit: cover; }
-    .overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; padding-bottom: 120px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); display: flex; justify-content: space-between; align-items: flex-end; }
-    .info { flex: 1; padding-right: 20px; }
-    .info h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
-    .title { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
-    .desc { font-size: 14px; opacity: 0.9; }
-    .actions { display: flex; flex-direction: column; gap: 18px; align-items: center; }
-    .action-btn { background: rgba(255,255,255,0.15); border: none; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; color: white; cursor: pointer; backdrop-filter: blur(10px); }
-    .action-btn:active { transform: scale(0.9); background: rgba(76,175,80,0.8); }
-    .action-btn span { font-size: 11px; margin-top: 2px; font-weight: bold; }
-    .global-actions { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 100; }
-    .gbtn { background: #2196F3; color: white; padding: 12px 18px; border: none; border-radius: 25px; font-weight: bold; cursor: pointer; }
-    .gbtn.live { background: #f44336; }
-    .join-btn { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #25D366; color: white; padding: 14px 28px; border-radius: 30px; text-decoration: none; font-weight: bold; z-index: 100; }
-    .empty-state { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
-    .call-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 999; }
-    .remote-video { width: 100%; height: 100%; background: #111; }
-    .local-video { position: absolute; top: 20px; right: 20px; width: 120px; height: 160px; border-radius: 12px; overflow: hidden; background: #333; }
-    .live-badge { position: absolute; top: 20px; left: 20px; background: #f44336; padding: 6px 12px; border-radius: 15px; font-weight: bold; }
-    .end-call { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: #f44336; color: white; padding: 14px 30px; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; }
-    .happy-msg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #4CAF50; color: white; padding: 15px 25px; border-radius: 25px; font-weight: bold; z-index: 9999; animation: popUp 0.3s ease; pointer-events: none; }
+       .feed { height: 100vh; overflow-y: scroll; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; }
+       .video-section { height: 100vh; width: 100vw; scroll-snap-align: start; position: relative; display: flex; align-items: center; justify-content: center; background: #000; }
+       .video-player { height: 100%; width: 100%; object-fit: cover; }
+       .overlay { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; padding-bottom: 120px; background: linear-gradient(transparent, rgba(0,0,0,0.8)); display: flex; justify-content: space-between; align-items: flex-end; }
+       .info { flex: 1; padding-right: 20px; }
+       .info h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; }
+       .title { font-size: 18px; font-weight: bold; margin-bottom: 4px; }
+       .desc { font-size: 14px; opacity: 0.9; }
+       .actions { display: flex; flex-direction: column; gap: 18px; align-items: center; }
+       .action-btn { background: rgba(255,255,255,0.15); border: none; width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-direction: column; color: white; cursor: pointer; backdrop-filter: blur(10px); }
+       .action-btn:active { transform: scale(0.9); background: rgba(76,175,80,0.8); }
+       .action-btn span { font-size: 11px; margin-top: 2px; font-weight: bold; }
+       .global-actions { position: fixed; top: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 100; }
+       .gbtn { background: #2196F3; color: white; padding: 12px 18px; border: none; border-radius: 25px; font-weight: bold; cursor: pointer; }
+       .gbtn.live { background: #f44336; }
+       .join-btn { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: #25D366; color: white; padding: 14px 28px; border-radius: 30px; text-decoration: none; font-weight: bold; z-index: 100; }
+       .empty-state { height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+       .call-overlay { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #000; z-index: 999; }
+       .remote-video { width: 100%; height: 100%; background: #111; }
+       .local-video { position: absolute; top: 20px; right: 20px; width: 120px; height: 160px; border-radius: 12px; overflow: hidden; background: #333; }
+       .live-badge { position: absolute; top: 20px; left: 20px; background: #f44336; padding: 6px 12px; border-radius: 15px; font-weight: bold; }
+       .end-call { position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%); background: #f44336; color: white; padding: 14px 30px; border: none; border-radius: 30px; font-size: 16px; font-weight: bold; }
+       .happy-msg { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #4CAF50; color: white; padding: 15px 25px; border-radius: 25px; font-weight: bold; z-index: 9999; animation: popUp 0.3s ease; pointer-events: none; }
         @keyframes popUp { from {opacity: 0; transform: translate(-50%, -50%) scale(0.8);} to {opacity: 1; transform: translate(-50%, -50%) scale(1);} }
       `}</style>
     </>
