@@ -1,20 +1,17 @@
 import { useState, useEffect, useRef } from 'react'
 import { Cloudinary } from '@cloudinary/url-gen'
 import { AdvancedVideo } from '@cloudinary/react'
-import { upload } from '@cloudinary/url-gen/actions/upload'
 
 const cld = new Cloudinary({
   cloud: {
-    cloudName: 'ton-cloud-name' // ← remplace par ton cloud name Cloudinary
+    cloudName: 'dvoya2e3o'
   }
 })
 
 function App() {
   const [videos, setVideos] = useState([])
   const [currentIndex, setCurrentIndex] = useState(0)
-  const videoRefs = useRef([])
 
-  // Charger les vidéos depuis localStorage au démarrage
   useEffect(() => {
     const savedVideos = localStorage.getItem('gloiremedia_videos')
     if (savedVideos) {
@@ -22,31 +19,40 @@ function App() {
     }
   }, [])
 
-  // Sauvegarder dans localStorage quand videos change
   useEffect(() => {
     localStorage.setItem('gloiremedia_videos', JSON.stringify(videos))
   }, [videos])
 
-  const handleUpload = async () => {
+  const handleUpload = () => {
+    if (!window.cloudinary) {
+      alert("Le widget Cloudinary ne charge pas. Vérifie index.html")
+      return
+    }
+
     const widget = window.cloudinary.createUploadWidget(
       {
-        cloudName: 'ton-cloud-name', // ← remplace par ton cloud name
-        uploadPreset: 'ton-upload-preset', // ← remplace par ton preset
+        cloudName: 'dvoya2e3o',
+        uploadPreset: 'gloiremedia',
         sources: ['local', 'camera'],
         multiple: false,
         resourceType: 'video',
         clientAllowedFormats: ['mp4', 'mov', 'avi'],
-        maxFileSize: 100000 // 100MB
+        maxFileSize: 100000,
+        theme: 'minimal',
+        language: 'fr'
       },
       (error, result) => {
         if (!error && result && result.event === 'success') {
           const newVideo = {
             id: Date.now(),
             publicId: result.info.public_id,
-            url: result.info.secure_url,
-            thumbnail: result.info.thumbnail_url
+            url: result.info.secure_url
           }
           setVideos(prev => [newVideo,...prev])
+        }
+        if (error) {
+          console.error('Upload error:', error)
+          alert('Erreur upload : ' + error.message)
         }
       }
     )
@@ -54,11 +60,10 @@ function App() {
   }
 
   const downloadVideo = (url) => {
-    // Force le téléchargement avec fl_attachment
     const downloadUrl = url.replace('/upload/', '/upload/fl_attachment/')
     const a = document.createElement('a')
     a.href = downloadUrl
-    a.download = `video-${Date.now()}.mp4`
+    a.download = `gloiremedia-${Date.now()}.mp4`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -73,9 +78,9 @@ function App() {
     <div className="app">
       <div className="header">
         <button onClick={handleUpload} className="btn-upload">+ Uploader</button>
-        <button className="btn-call">Appel Vidéo</button>
-        <button className="btn-call">Appel Audio</button>
-        <button className="btn-live">Live</button>
+        <button className="btn-call" disabled>Appel Vidéo</button>
+        <button className="btn-call" disabled>Appel Audio</button>
+        <button className="btn-live" disabled>Live</button>
       </div>
 
       {videos.length === 0? (
@@ -93,8 +98,8 @@ function App() {
                 autoPlay={index === currentIndex}
                 muted={index!== currentIndex}
                 loop
+                playsInline
                 className="video-player"
-                ref={el => videoRefs.current[index] = el}
               />
               <button
                 onClick={() => downloadVideo(video.url)}
@@ -107,7 +112,18 @@ function App() {
         </div>
       )}
 
-      <style jsx>{`
+      <style jsx global>{`
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body, html, #root {
+          height: 100%;
+          background: #000;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          overflow: hidden;
+        }
        .app {
           height: 100vh;
           background: #000;
@@ -129,6 +145,11 @@ function App() {
           border-radius: 25px;
           font-weight: bold;
           cursor: pointer;
+          font-size: 14px;
+        }
+        button:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
         }
        .btn-upload,.btn-call {
           background: #0095f6;
@@ -144,11 +165,14 @@ function App() {
           right: 20px;
           background: rgba(255,255,255,0.2);
           backdrop-filter: blur(10px);
+          color: #fff;
+          z-index: 5;
         }
        .video-feed {
           height: 100vh;
           overflow-y: scroll;
           scroll-snap-type: y mandatory;
+          -webkit-overflow-scrolling: touch;
         }
        .video-item {
           height: 100vh;
@@ -170,6 +194,14 @@ function App() {
           align-items: center;
           justify-content: center;
           text-align: center;
+          padding: 20px;
+        }
+       .empty-state h2 {
+          font-size: 24px;
+          margin-bottom: 10px;
+        }
+       .empty-state p {
+          color: #888;
         }
       `}</style>
     </div>
