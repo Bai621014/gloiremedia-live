@@ -1,206 +1,261 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-const CLOUD_NAME = "dvoya2e3o";
-const UPLOAD_PRESET = "gloiremedia";
+const CLOUD_NAME = "dvoya2e3d";
+const UPLOAD_PRESET = "gloire";
 
 function App() {
   const [medias, setMedias] = useState([
     {
+      id: "video_1",
       type: "video",
-      url: "https://res.cloudinary.com/dvoya2e3o/video/upload/v1778067776/Appuyez_..._360p_kigzk0.mp4",
-      title: "RHAPATHON - JOUR 3"
+      url: "https://res.cloudinary.com/dvoya2e3d/video/upload/sample1.mp4",
+      title: "RHAPATHON - JOUR 1",
+      desc: "Que Dieu te bénisse aujourd'hui 🙏"
     },
     {
-      type: "image",
-      url: "https://res.cloudinary.com/dvoya2e3o/image/upload/v1748067776/rhapathon-poster.jpg",
-      title: "Affiche Officielle"
+      id: "video_2",
+      type: "video",
+      url: "https://res.cloudinary.com/dvoya2e3d/video/upload/sample2.mp4",
+      title: "Message d'espoir",
+      desc: "Ne perds pas courage, Jésus agit 🔥"
     }
   ]);
 
-  const [selected, setSelected] = useState(medias[0]);
-  const [uploading, setUploading] = useState(false);
-  const [showUpload, setShowUpload] = useState(false);
-  const [title, setTitle] = useState("");
-  const [file, setFile] = useState(null);
-  const videoRef = useRef(null);
+  const [reactions, setReactions] = useState(
+    JSON.parse(localStorage.getItem('gloiremedia_reactions')) || {}
+  );
 
-  const handleFileSelect = (e) => {
-    setFile(e.target.files[0]);
-    setShowUpload(true);
+  const videoRefs = useRef({});
+
+  // Sauvegarder les réactions dans localStorage
+  useEffect(() => {
+    localStorage.setItem('gloiremedia_reactions', JSON.stringify(reactions));
+  }, [reactions]);
+
+  // Autoplay + pause quand on scroll
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          const video = entry.target;
+          if (entry.isIntersecting) {
+            video.play().catch(() => {});
+          } else {
+            video.pause();
+          }
+        });
+      },
+      { threshold: 0.7 }
+    );
+
+    Object.values(videoRefs.current).forEach(video => {
+      if (video) observer.observe(video);
+    });
+
+    return () => observer.disconnect();
+  }, [medias]);
+
+  // Système de réactions 100% positives
+  const handleReact = (videoId, type) => {
+    setReactions(prev => {
+      const newReactions = {...prev };
+      if (!newReactions[videoId]) newReactions[videoId] = {};
+      if (!newReactions[videoId][type]) newReactions[videoId][type] = 0;
+      newReactions[videoId][type] += 1;
+      return newReactions;
+    });
+    showHappyMessage(type);
   };
 
-  const handleUpload = async () => {
-    if (!file ||!title.trim()) {
-      alert("Mets un titre et choisis un fichier Boss");
-      return;
-    }
+  const showHappyMessage = (type) => {
+    const messages = {
+      like: "Gloire à Dieu! ❤️",
+      amen: "Amen! 🙏",
+      heureux: "Que la joie te remplisse! 😄",
+      feu: "L'Esprit Saint agit! 🔥"
+    };
 
-    setUploading(true);
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", UPLOAD_PRESET);
-
-    const resourceType = file.type.startsWith("video")? "video" : "image";
-
-    try {
-      const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/${resourceType}/upload`, {
-        method: "POST",
-        body: formData
-      });
-      const data = await res.json();
-
-      const newMedia = {
-        type: resourceType,
-        url: data.secure_url,
-        title: title.trim()
-      };
-
-      setMedias([newMedia,...medias]);
-      setSelected(newMedia);
-      setShowUpload(false);
-      setTitle("");
-      setFile(null);
-    } catch (err) {
-      alert("Erreur upload : " + err.message);
-    }
-    setUploading(false);
-  };
-
-  const handleSelectMedia = (media) => {
-    setSelected(media);
-  };
-
-  const handleVideoEnd = () => {
-    const currentIndex = medias.findIndex(m => m.url === selected.url);
-    const nextIndex = (currentIndex + 1) % medias.length;
-    if (medias[nextIndex].type === "video") {
-      setSelected(medias[nextIndex]);
-    }
+    const div = document.createElement('div');
+    div.className = 'happy-msg';
+    div.innerText = messages[type];
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 1500);
   };
 
   return (
-    <div style={{ backgroundColor: "#000", minHeight: "100vh", padding: "20px", color: "#fff" }}>
-      <h1 style={{ color: "#FFD700", fontSize: "32px", textAlign: "center", marginBottom: "20px" }}>
-        🔴 GLOIREMEDIA LIVE
-      </h1>
-
-      {/* Upload */}
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        {!showUpload? (
-          <label style={{
-            backgroundColor: "#FFD700",
-            color: "#000",
-            padding: "12px 24px",
-            borderRadius: "8px",
-            cursor: "pointer",
-            fontWeight: "bold",
-            display: "inline-block"
-          }}>
-            📤 Ajouter Photo/Vidéo
-            <input
-              type="file"
-              accept="image/*,video/*"
-              onChange={handleFileSelect}
-              style={{ display: "none" }}
+    <>
+      <div className="feed">
+        {medias.filter(m => m.type === "video").map((media) => (
+          <div className="video-section" key={media.id}>
+            <video
+              ref={el => videoRefs.current[media.id] = el}
+              src={media.url}
+              muted
+              loop
+              playsInline
+              className="video-player"
             />
-          </label>
-        ) : (
-          <div style={{ maxWidth: "400px", margin: "0 auto", backgroundColor: "#111", padding: "15px", borderRadius: "8px" }}>
-            <input
-              type="text"
-              placeholder="Titre de la vidéo/photo"
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
-              style={{
-                width: "100%",
-                padding: "10px",
-                marginBottom: "10px",
-                borderRadius: "6px",
-                border: "1px solid #333",
-                backgroundColor: "#000",
-                color: "#fff"
-              }}
-            />
-            <div style={{ display: "flex", gap: "10px" }}>
-              <button
-                onClick={handleUpload}
-                disabled={uploading}
-                style={{
-                  flex: 1,
-                  backgroundColor: "#FFD700",
-                  color: "#000",
-                  padding: "10px",
-                  border: "none",
-                  borderRadius: "6px",
-                  fontWeight: "bold",
-                  cursor: "pointer"
-                }}
-              >
-                {uploading? "Upload..." : "Confirmer"}
-              </button>
-              <button
-                onClick={() => {setShowUpload(false); setFile(null); setTitle("");}}
-                style={{
-                  flex: 1,
-                  backgroundColor: "#333",
-                  color: "#fff",
-                  padding: "10px",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer"
-                }}
-              >
-                Annuler
-              </button>
+            <div className="overlay">
+              <div className="info">
+                <h3>@gloiremedia</h3>
+                <p className="title">{media.title}</p>
+                <p className="desc">{media.desc}</p>
+              </div>
+              <div className="actions">
+                <button className="action-btn" onClick={() => handleReact(media.id, 'like')}>
+                  ❤️<span>{reactions[media.id]?.like || 0}</span>
+                </button>
+                <button className="action-btn" onClick={() => handleReact(media.id, 'amen')}>
+                  🙏<span>{reactions[media.id]?.amen || 0}</span>
+                </button>
+                <button className="action-btn" onClick={() => handleReact(media.id, 'heureux')}>
+                  😄<span>{reactions[media.id]?.heureux || 0}</span>
+                </button>
+                <button className="action-btn" onClick={() => handleReact(media.id, 'feu')}>
+                  🔥<span>{reactions[media.id]?.feu || 0}</span>
+                </button>
+              </div>
             </div>
           </div>
-        )}
-      </div>
-
-      {/* Lecteur principal */}
-      <div style={{ maxWidth: "900px", margin: "0 auto" }}>
-        {selected.type === "video"? (
-          <video
-            ref={videoRef}
-            key={selected.url}
-            src={selected.url}
-            controls
-            autoPlay
-            playsInline
-            onEnded={handleVideoEnd}
-            style={{ width: "100%", borderRadius: "8px", border: "2px solid #FFD700" }}
-          />
-        ) : (
-          <img
-            src={selected.url}
-            alt={selected.title}
-            style={{ width: "100%", borderRadius: "8px", border: "2px solid #FFD700" }}
-          />
-        )}
-        <h2 style={{ color: "#fff", textAlign: "center", marginTop: "15px" }}>{selected.title}</h2>
-      </div>
-
-      {/* Liste des médias */}
-      <div style={{ display: "flex", gap: "10px", flexWrap: "wrap", justifyContent: "center", marginTop: "30px" }}>
-        {medias.map((media, index) => (
-          <div
-            key={index}
-            onClick={() => handleSelectMedia(media)}
-            style={{
-              cursor: "pointer",
-              border: selected.url === media.url? "2px solid #FFD700" : "1px solid #333",
-              borderRadius: "6px",
-              padding: "8px 12px",
-              backgroundColor: "#111",
-              minWidth: "120px",
-              textAlign: "center"
-            }}
-          >
-            <p style={{ fontSize: "14px", color: "#FFD700", margin: 0 }}>{media.title}</p>
-          </div>
         ))}
+
+        <a
+          href="METS_TON_LIEN_WHATSAPP_ICI"
+          className="join-btn"
+          target="_blank"
+          rel="noreferrer"
+        >
+          🙏 Rejoindre le Groupe de Prière
+        </a>
       </div>
-    </div>
+
+      <style jsx global>{`
+        * {
+          margin: 0;
+          padding: 0;
+          box-sizing: border-box;
+        }
+        body {
+          background: #000;
+          color: white;
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+          overflow: hidden;
+        }
+       .feed {
+          height: 100vh;
+          overflow-y: scroll;
+          scroll-snap-type: y mandatory;
+          -webkit-overflow-scrolling: touch;
+        }
+       .video-section {
+          height: 100vh;
+          width: 100vw;
+          scroll-snap-align: start;
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          background: #000;
+        }
+       .video-player {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+        }
+       .overlay {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          padding: 20px;
+          padding-bottom: 120px;
+          background: linear-gradient(transparent, rgba(0,0,0,0.8));
+          display: flex;
+          justify-content: space-between;
+          align-items: flex-end;
+        }
+       .info {
+          flex: 1;
+          padding-right: 20px;
+        }
+       .info h3 {
+          font-size: 16px;
+          font-weight: 600;
+          margin-bottom: 6px;
+        }
+       .info.title {
+          font-size: 18px;
+          font-weight: bold;
+          margin-bottom: 4px;
+        }
+       .info.desc {
+          font-size: 14px;
+          opacity: 0.9;
+        }
+       .actions {
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          align-items: center;
+        }
+       .action-btn {
+          background: rgba(255,255,255,0.15);
+          border: none;
+          width: 52px;
+          height: 52px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+          color: white;
+          cursor: pointer;
+          backdrop-filter: blur(10px);
+          transition: 0.2s;
+        }
+       .action-btn:active {
+          transform: scale(0.9);
+          background: rgba(76,175,80,0.8);
+        }
+       .action-btn span {
+          font-size: 12px;
+          margin-top: 2px;
+          font-weight: bold;
+        }
+       .join-btn {
+          position: fixed;
+          bottom: 30px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: #25D366;
+          color: white;
+          padding: 14px 28px;
+          border-radius: 30px;
+          text-decoration: none;
+          font-weight: bold;
+          z-index: 100;
+          box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+       .happy-msg {
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: #4CAF50;
+          color: white;
+          padding: 15px 25px;
+          border-radius: 25px;
+          font-weight: bold;
+          z-index: 9999;
+          animation: popUp 0.3s ease;
+          pointer-events: none;
+        }
+        @keyframes popUp {
+          from {opacity: 0; transform: translate(-50%, -50%) scale(0.8);}
+          to {opacity: 1; transform: translate(-50%, -50%) scale(1);}
+        }
+      `}</style>
+    </>
   );
 }
 
